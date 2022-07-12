@@ -33,10 +33,10 @@ macro_rules! use_effect {
         })
     };
     ( $y:expr; $z:expr ) => {
-        yew::use_effect_with_deps(move || {
+        yew::use_effect_with_deps(move |$(($z),)*| {
             $y();
             || ()
-        }, $z)
+        }, $($z.clone();)*)
     };
     ( $( $x:ident ),*; $y:expr ) => {
         {
@@ -47,13 +47,13 @@ macro_rules! use_effect {
             })
         }
     };
-    ( $( $x:ident ),*; $y:expr; $z:expr ) => {
+    ( $( $x:ident ),*; $y:expr; $( $z:ident ),*) => {
         {
             $(let $x = $x.clone();)*
-            yew::use_effect_with_deps(move || {
+            yew::use_effect_with_deps(move |$(($z),)*| {
                 $y();
                 || ()
-            }, $z)
+            }, $($z.clone();)*)
         }
     };
 }
