@@ -25,35 +25,8 @@ macro_rules! callback {
 }
 
 #[macro_export]
-macro_rules! use_effect {
-    ( $y:expr ) => {
-        yew::use_effect(move || {
-            $y();
-            || ()
-        })
-    };
-    ( $y:expr; $z:expr ) => {
-        yew::use_effect_with_deps(move |$(($z),)*| {
-            $y();
-            || ()
-        }, $($z.clone();)*)
-    };
-    ( $( $x:ident ),*; $y:expr ) => {
-        {
-            $(let $x = $x.clone();)*
-            yew::use_effect(move || {
-                $y();
-                || ()
-            })
-        }
-    };
-    ( $( $x:ident ),*; $y:expr; $( $z:ident ),*) => {
-        {
-            $(let $x = $x.clone();)*
-            yew::use_effect_with_deps(move |$(($z),)*| {
-                $y();
-                || ()
-            }, $($z.clone();)*)
-        }
-    };
-}
+macro_rules! clone(
+    ( $( $x:ident ),* ) => {
+        $(let $x = $x.clone();)*
+    }
+);
